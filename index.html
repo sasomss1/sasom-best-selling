@@ -35,6 +35,10 @@ html[data-lang="en"] [data-th]{display:none}
 .hero{background:var(--hero);color:var(--hero-text)}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 .topbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,.12);overflow-x:auto;scrollbar-width:none}
+.tabs a{padding:10px 14px;font-weight:600;font-size:13px;color:var(--hero-sub);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs a.active{color:#fff;border-color:var(--accent)}
+.tabs a:hover{color:#fff}
 .brand{font-weight:600;font-size:14px;letter-spacing:.02em;color:var(--hero-sub)}
 .controls{display:flex;align-items:center;gap:12px}
 .pill-toggle{display:flex;padding:3px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
@@ -119,6 +123,10 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:0 0 32px}
         </div>
       </div>
     </div>
+    <nav class="tabs">
+      <a href="./" class="active">Prepare for 11.11</a>
+      <a href="report.html">Best Selling Report</a>
+    </nav>
     <div class="hero-body">
       <div class="kicker">TOP 20 BEST SELLING BOX / PACK</div>
       <h1>Prepare for 11.11</h1>

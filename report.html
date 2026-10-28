@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th" data-lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Selling Report | SASOM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAFA;--card:#FFFFFF;--line:#E7E7E7;--line-soft:#F0F0F0;--text:#141414;--sub:#8A8A8A;--dark:#1B1B1B;--accent:#C9FF00;--accent-text:#1B1B1B;--chip:#FFFFFF;--bar:#1B1B1B;--hero:#1B1B1B}
+:root[data-theme="dark"]{--bg:#111111;--card:#1B1B1B;--line:#2C2C2C;--line-soft:#232323;--text:#F5F5F5;--sub:#8A8A8A;--chip:#1B1B1B;--bar:#5A5A5A;--hero:#000000}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#111111;--card:#1B1B1B;--line:#2C2C2C;--line-soft:#232323;--text:#F5F5F5;--sub:#8A8A8A;--chip:#1B1B1B;--bar:#5A5A5A;--hero:#000000}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;transition:background .25s,color .25s}
+a{color:inherit;text-decoration:none}
+button,input,select{font-family:inherit;color:inherit}
+html[data-lang="th"] [data-en]{display:none}
+html[data-lang="en"] [data-th]{display:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;height:56px;gap:12px}
+.brand{font-weight:600;font-size:14px;letter-spacing:.02em;color:var(--sub)}
+.controls{display:flex;align-items:center;gap:12px}
+.pill-toggle{display:inline-flex;padding:3px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+.pill-toggle button{font-weight:600;font-size:12px;border:none;background:transparent;color:var(--sub);padding:5px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.pill-toggle button.active{background:var(--accent);color:var(--accent-text)}
+.switch{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;font-weight:600;color:var(--sub);user-select:none}
+.knob-track{width:34px;height:20px;border-radius:999px;background:var(--line);position:relative;transition:background .25s cubic-bezier(.4,0,.2,1)}
+.knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.15);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+:root[data-theme="dark"] .knob-track{background:var(--accent)}
+:root[data-theme="dark"] .knob{transform:translateX(14px);background:var(--dark)}
+
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
+.tabs a{padding:10px 14px;font-weight:600;font-size:13px;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs a.active{color:var(--text);border-color:var(--text)}
+.tabs a:hover{color:var(--text)}
+
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.updated{font-size:12px;color:var(--sub);margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:600;font-size:13px;cursor:pointer}
+.btn:hover{border-color:var(--text)}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:14px;margin-bottom:16px}
+.frow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.flabel{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);min-width:64px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;user-select:none}
+.chip:hover{border-color:var(--text)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-text);font-weight:700}
+.chip .n{color:var(--sub);font-weight:500;margin-left:4px;font-variant-numeric:tabular-nums}
+.chip.on .n{color:var(--accent-text);opacity:.6}
+.dates{display:flex;align-items:center;gap:6px}
+.dates input{height:32px;border:1px solid var(--line);background:var(--chip);border-radius:9px;padding:0 10px;font-size:13px}
+:root[data-theme="dark"] .dates input{color-scheme:dark}
+.search{height:32px;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:0 14px;font-size:13px;min-width:220px;flex:1;max-width:340px}
+.search:focus,.dates input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.more-brands{display:none}
+.show-all .more-brands{display:inline-flex}
+.toggle-more{border-style:dashed}
+
+.kpis{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.kpi .k{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+.kpi .v{font-size:26px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi.hero{background:var(--hero);border-color:var(--hero)}
+.kpi.hero .k{color:#9A9A9A}
+.kpi.hero .v{color:var(--accent);font-size:34px}
+
+.panels{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.ptitle{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px;margin-bottom:12px}
+.ptitle::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.ptitle .r{margin-left:auto;font-weight:500;color:var(--sub);font-size:12px}
+#trend{width:100%;height:150px;display:block}
+.tip{font-size:12px;color:var(--sub);height:16px;margin-top:6px;font-variant-numeric:tabular-nums}
+.blist{display:grid;gap:9px}
+.brow{display:grid;grid-template-columns:96px 1fr 64px;align-items:center;gap:8px;font-size:12px;cursor:pointer}
+.brow .bn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.brow .bt{height:8px;border-radius:999px;background:var(--line-soft);overflow:hidden}
+.brow .bf{height:100%;background:var(--bar);border-radius:999px}
+.brow.on .bf{background:var(--accent)}
+.brow .bv{text-align:right;color:var(--sub);font-variant-numeric:tabular-nums}
+
+.tablecard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:40px}
+.tbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+th.sort{cursor:pointer}
+th.sort.on{color:var(--text)}
+td{padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--line-soft)}
+.rk{font-weight:700;width:36px;color:var(--sub);font-variant-numeric:tabular-nums}
+.rk.top{color:var(--text)}
+.thumb{width:44px;height:44px;border-radius:8px;background:#fff;border:1px solid var(--line-soft);object-fit:contain;display:block}
+.pname{font-weight:500;line-height:1.4;max-width:460px}
+.pname:hover{text-decoration:underline}
+.psku{font-size:11px;color:var(--sub);margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--line-soft);white-space:nowrap}
+.tag.bp{background:#EAF7EA;color:#2E7D32}
+.tag.sc{background:#FFF6DC;color:#6B5900}
+:root[data-theme="dark"] .tag.bp{background:#1E3320;color:#8FD694}
+:root[data-theme="dark"] .tag.sc{background:#3A3216;color:#E6CD6B}
+.units{font-weight:700}
+.share{color:var(--sub);font-size:12px}
+.foot{display:flex;justify-content:center;padding:14px}
+.empty{padding:40px;text-align:center;color:var(--sub)}
+.loading{padding:60px;text-align:center;color:var(--sub)}
+
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.panels{grid-template-columns:1fr}.col-lang,.col-avg{display:none}}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  h1{font-size:22px}
+  .kpi .v{font-size:20px}.kpi.hero .v{font-size:24px}
+  .col-brand,.col-type,.col-share{display:none}
+  .pname{max-width:none;font-size:13px}
+  .search{min-width:0;max-width:none;width:100%}
+  .flabel{min-width:100%}
+  td,th{padding:9px 8px}
+  .thumb{width:38px;height:38px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">SASOM</div>
+    <div class="controls">
+      <div class="pill-toggle" id="langToggle"><button data-set="en">EN</button><button data-set="th" class="active">TH</button></div>
+      <div class="switch" id="themeToggle" role="switch" tabindex="0"><span id="themeLabel"></span><div class="knob-track"><div class="knob"></div></div></div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <a href="./">Prepare for 11.11</a>
+    <a href="report.html" class="active">Best Selling Report</a>
+  </nav>
+
+  <div class="head">
+    <div>
+      <h1>TCG Best Selling</h1>
+      <div class="updated" id="updated"></div>
+    </div>
+    <button class="btn" id="exportBtn"><span data-th>Export CSV</span><span data-en>Export CSV</span></button>
+  </div>
+
+  <section class="filters">
+    <div class="frow">
+      <span class="flabel"><span data-th>ช่วงเวลา</span><span data-en>Period</span></span>
+      <div class="chips" id="presets"></div>
+    </div>
+    <div class="frow">
+      <span class="flabel"><span data-th>เดือน</span><span data-en>Month</span></span>
+      <div class="chips" id="months"></div>
+      <div class="dates"><input type="date" id="dFrom"><span style="color:var(--sub)">-</span><input type="date" id="dTo"></div>
+    </div>
+    <div class="frow">
+      <span class="flabel">Sub</span>
+      <div class="pill-toggle" id="subToggle">
+        <button data-v="" class="active">All</button><button data-v="B">Box / Pack</button><button data-v="S">Single Card</button>
+      </div>
+      <span class="flabel" style="min-width:auto;margin-left:8px"><span data-th>ภาษา</span><span data-en>Language</span></span>
+      <div class="chips" id="langs"></div>
+    </div>
+    <div class="frow">
+      <span class="flabel">Brand</span>
+      <div class="chips" id="brands"></div>
+    </div>
+    <div class="frow">
+      <input class="search" id="q" type="search" placeholder="Search SKU / product name">
+    </div>
+  </section>
+
+  <section class="kpis">
+    <div class="kpi hero"><div class="k">GMV (THB)</div><div class="v" id="kGmv">-</div></div>
+    <div class="kpi"><div class="k"><span data-th>จำนวนขาย (ชิ้น)</span><span data-en>Units Sold</span></div><div class="v" id="kUnits">-</div></div>
+    <div class="kpi"><div class="k"><span data-th>SKU ที่ขายได้</span><span data-en>SKUs Sold</span></div><div class="v" id="kSkus">-</div></div>
+    <div class="kpi"><div class="k"><span data-th>ราคาเฉลี่ย/ชิ้น</span><span data-en>Avg Price / Unit</span></div><div class="v" id="kAvg">-</div></div>
+  </section>
+
+  <section class="panels">
+    <div class="panel">
+      <div class="ptitle"><span data-th>ยอดขายรายวัน</span><span data-en>Daily Sales</span><span class="r" id="trendMetric"></span></div>
+      <svg id="trend" preserveAspectRatio="none"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle"><span data-th>Top Brand</span><span data-en>Top Brands</span></div>
+      <div class="blist" id="blist"></div>
+    </div>
+  </section>
+
+  <section class="tablecard">
+    <div class="tbar">
+      <div class="ptitle" style="margin:0"><span data-th>อันดับสินค้าขายดี</span><span data-en>Best Selling Products</span><span class="r" id="count"></span></div>
+      <div class="pill-toggle" id="sortToggle"><button data-v="u" class="active"><span data-th>เรียงตามชิ้น</span><span data-en>By Units</span></button><button data-v="v"><span data-th>เรียงตาม GMV</span><span data-en>By GMV</span></button></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>#</th><th></th><th><span data-th>สินค้า</span><span data-en>Product</span></th>
+          <th class="col-brand">Brand</th><th class="col-type">Sub</th><th class="col-lang"><span data-th>ภาษา</span><span data-en>Lang</span></th>
+          <th class="num sort on" data-s="u"><span data-th>ชิ้น</span><span data-en>Units</span></th>
+          <th class="num sort" data-s="v">GMV</th>
+          <th class="num col-avg"><span data-th>เฉลี่ย</span><span data-en>Avg</span></th>
+          <th class="num col-share">Share</th>
+        </tr></thead>
+        <tbody id="tbody"><tr><td colspan="10" class="loading">Loading...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="foot"><button class="btn" id="moreBtn" style="display:none"><span data-th>แสดงเพิ่ม</span><span data-en>Show more</span></button></div>
+  </section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const root=document.documentElement;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+const fmtK=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':fmt(n);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const LANG_NAMES={JP:'JP',EN:'EN',TH:'TH',CN:'CN',KR:'KR','':'Other'};
+
+let D,Y0,MAXD;
+const S={from:0,to:0,sub:'',brands:new Set(),langs:new Set(),q:'',sort:'u',limit:50,preset:'m-last'};
+
+// ---------- lang / theme ----------
+function setLang(l){root.dataset.lang=l;root.lang=l;document.querySelectorAll('#langToggle button').forEach(b=>b.classList.toggle('active',b.dataset.set===l));store.set('bsr-lang',l);if(D){renderPresets();renderMonths();renderAll();}}
+document.querySelectorAll('#langToggle button').forEach(b=>b.onclick=()=>setLang(b.dataset.set));
+const isDark=()=>root.dataset.theme==='dark'||(!root.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches);
+function paintSwitch(){const d=isDark();root.dataset.theme=d?'dark':'light';$('themeLabel').innerHTML=d?'<span data-en>Light</span><span data-th>สว่าง</span>':'<span data-en>Dark</span><span data-th>มืด</span>';}
+const savedT=store.get('bsr-theme');if(savedT)root.dataset.theme=savedT;paintSwitch();
+const flip=()=>{root.dataset.theme=isDark()?'light':'dark';store.set('bsr-theme',root.dataset.theme);paintSwitch();if(D)drawTrend(lastDaily);};
+$('themeToggle').onclick=flip;$('themeToggle').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}};
+setLang(store.get('bsr-lang')||'th');
+
+// ---------- dates ----------
+const dayToDate=d=>new Date(Date.UTC(Y0,0,1+d));
+const dayToISO=d=>dayToDate(d).toISOString().slice(0,10);
+const isoToDay=s=>Math.round((Date.UTC(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10))-Date.UTC(Y0,0,1))/864e5);
+const monthStart=m=>isoToDay(`${Y0}-${String(m+1).padStart(2,'0')}-01`);
+const monthEnd=m=>m===11?isoToDay(`${Y0}-12-31`):monthStart(m+1)-1;
+const L=()=>root.dataset.lang;
+function fmtDay(d){const x=dayToDate(d);return `${x.getUTCDate()} ${(L()==='th'?MONTHS_TH:MONTHS_EN)[x.getUTCMonth()]}`;}
+
+function presetList(){
+  const lastM=dayToDate(MAXD).getUTCMonth();
+  const curStart=monthStart(lastM);
+  const prev=lastM-1;
+  return [
+    ['m-last',L()==='th'?'เดือนที่แล้ว':'Last month',monthStart(prev),monthEnd(prev)],
+    ['mtd',L()==='th'?'เดือนนี้':'This month',curStart,MAXD],
+    ['7d',L()==='th'?'7 วันล่าสุด':'Last 7 days',MAXD-6,MAXD],
+    ['30d',L()==='th'?'30 วันล่าสุด':'Last 30 days',MAXD-29,MAXD],
+    ['ytd',L()==='th'?'ทั้งปี':'Year to date',0,MAXD],
+  ];
+}
+function setRange(f,t,preset){S.from=Math.max(0,Math.min(f,t));S.to=Math.min(MAXD,Math.max(f,t));S.preset=preset||'';S.limit=50;$('dFrom').value=dayToISO(S.from);$('dTo').value=dayToISO(S.to);renderPresets();renderMonths();renderAll();}
+function renderPresets(){$('presets').innerHTML=presetList().map(([k,l])=>`<span class="chip${S.preset===k?' on':''}" data-k="${k}">${l}</span>`).join('');
+  $('presets').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const p=presetList().find(x=>x[0]===c.dataset.k);setRange(p[2],p[3],p[0]);});}
+function renderMonths(){const last=dayToDate(MAXD).getUTCMonth();let h='';for(let m=0;m<=last;m++){h+=`<span class="chip${S.preset==='M'+m?' on':''}" data-m="${m}">${(L()==='th'?MONTHS_TH:MONTHS_EN)[m]}</span>`;}
+  $('months').innerHTML=h;$('months').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const m=+c.dataset.m;setRange(monthStart(m),Math.min(monthEnd(m),MAXD),'M'+m);});}
+$('dFrom').onchange=$('dTo').onchange=()=>{if(!$('dFrom').value||!$('dTo').value)return;setRange(isoToDay($('dFrom').value),isoToDay($('dTo').value),'');};
+
+// ---------- filters ----------
+function prodOk(p){
+  if(S.sub&&p[3]!==S.sub)return false;
+  if(S.brands.size&&!S.brands.has(p[2]))return false;
+  if(S.langs.size&&!S.langs.has(p[4]||''))return false;
+  if(S.q){const q=S.q;if(!p[0].toLowerCase().includes(q)&&!p[1].toLowerCase().includes(q))return false;}
+  return true;
+}
+function renderBrandChips(counts){
+  const all=[...new Set(D.p.map(p=>p[2]))].sort((a,b)=>(counts[b]||0)-(counts[a]||0)||a.localeCompare(b));
+  const TOP=6;
+  let h=`<span class="chip${S.brands.size?'':' on'}" data-b="">All</span>`;
+  all.forEach((b,i)=>{const sel=S.brands.has(b);h+=`<span class="chip${sel?' on':''}${i>=TOP&&!sel?' more-brands':''}" data-b="${esc(b)}">${esc(b)}<span class="n">${fmtK(counts[b]||0)}</span></span>`;});
+  if(all.length>TOP)h+=`<span class="chip toggle-more" id="moreB">${$('brands').classList.contains('show-all')?(L()==='th'?'ย่อ':'Less'):(L()==='th'?'Brand อื่นๆ':'More brands')} (${all.length-TOP})</span>`;
+  $('brands').innerHTML=h;
+  $('brands').querySelectorAll('.chip[data-b]').forEach(c=>c.onclick=()=>{const b=c.dataset.b;if(!b)S.brands.clear();else S.brands.has(b)?S.brands.delete(b):S.brands.add(b);S.limit=50;renderAll();});
+  const mb=$('moreB');if(mb)mb.onclick=()=>{$('brands').classList.toggle('show-all');renderBrandChips(counts);};
+}
+function renderLangChips(counts){
+  const all=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  let h=`<span class="chip${S.langs.size?'':' on'}" data-l="*">All</span>`;
+  all.forEach(l=>{h+=`<span class="chip${S.langs.has(l)?' on':''}" data-l="${l}">${LANG_NAMES[l]||l}</span>`;});
+  $('langs').innerHTML=h;
+  $('langs').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const l=c.dataset.l;if(l==='*')S.langs.clear();else S.langs.has(l)?S.langs.delete(l):S.langs.add(l);S.limit=50;renderAll();});
+}
+document.querySelectorAll('#subToggle button').forEach(b=>b.onclick=()=>{S.sub=b.dataset.v;S.limit=50;document.querySelectorAll('#subToggle button').forEach(x=>x.classList.toggle('active',x===b));renderAll();});
+function setSort(v){S.sort=v;document.querySelectorAll('#sortToggle button').forEach(x=>x.classList.toggle('active',x.dataset.v===v));document.querySelectorAll('th.sort').forEach(t=>t.classList.toggle('on',t.dataset.s===v));renderAll();}
+document.querySelectorAll('#sortToggle button').forEach(b=>b.onclick=()=>setSort(b.dataset.v));
+document.querySelectorAll('th.sort').forEach(t=>t.onclick=()=>setSort(t.dataset.s));
+let qt;$('q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{S.q=e.target.value.trim().toLowerCase();S.limit=50;renderAll();},180);};
+$('moreBtn').onclick=()=>{S.limit+=50;renderTable();};
+
+// ---------- compute ----------
+let rows=[],lastDaily=[],totU=0,totV=0;
+function renderAll(){
+  const F=D.f,P=D.p,n=F.i.length;
+  const ok=P.map(prodOk);
+  const agg=new Map(),daily=new Array(S.to-S.from+1).fill(0).map(()=>[0,0]);
+  const brandCnt={},brandV={},langCnt={};
+  // counts for chips ignore their own filter
+  for(let k=0;k<n;k++){
+    const d=F.d[k];if(d<S.from||d>S.to)continue;
+    const i=F.i[k],p=P[i],u=F.u[k],v=F.v[k];
+    // brand chip counts: apply all filters except brand
+    if((!S.sub||p[3]===S.sub)&&(!S.langs.size||S.langs.has(p[4]||''))&&(!S.q||p[0].toLowerCase().includes(S.q)||p[1].toLowerCase().includes(S.q))){brandCnt[p[2]]=(brandCnt[p[2]]||0)+(S.sort==='v'?v:u);}
+    if((!S.sub||p[3]===S.sub)&&(!S.brands.size||S.brands.has(p[2]))){langCnt[p[4]||'']=(langCnt[p[4]||'']||0)+u;}
+    if(!ok[i])continue;
+    let a=agg.get(i);if(!a){a=[0,0];agg.set(i,a);}a[0]+=u;a[1]+=v;
+    daily[d-S.from][0]+=u;daily[d-S.from][1]+=v;
+    brandV[p[2]]=(brandV[p[2]]||0)+(S.sort==='v'?v:u);
+  }
+  rows=[...agg.entries()].map(([i,a])=>({i,u:a[0],v:a[1]}));
+  rows.sort((a,b)=>S.sort==='v'?(b.v-a.v||b.u-a.u):(b.u-a.u||b.v-a.v));
+  totU=rows.reduce((s,r)=>s+r.u,0);totV=rows.reduce((s,r)=>s+r.v,0);
+  $('kGmv').textContent=fmt(totV);$('kUnits').textContent=fmt(totU);$('kSkus').textContent=fmt(rows.length);$('kAvg').textContent=totU?fmt(totV/totU):'-';
+  renderBrandChips(brandCnt);renderLangChips(langCnt);
+  renderBrandList(brandV);
+  lastDaily=daily;drawTrend(daily);
+  renderTable();
+}
+function renderBrandList(bv){
+  const arr=Object.entries(bv).sort((a,b)=>b[1]-a[1]).slice(0,8);const max=arr.length?arr[0][1]:1;
+  $('blist').innerHTML=arr.length?arr.map(([b,v])=>`<div class="brow${S.brands.has(b)?' on':''}" data-b="${esc(b)}"><span class="bn">${esc(b)}</span><span class="bt"><span class="bf" style="width:${Math.max(2,v/max*100)}%;display:block"></span></span><span class="bv">${fmtK(v)}</span></div>`).join(''):'<div class="empty" style="padding:20px">-</div>';
+  $('blist').querySelectorAll('.brow').forEach(r=>r.onclick=()=>{const b=r.dataset.b;S.brands.has(b)?S.brands.delete(b):S.brands.add(b);S.limit=50;renderAll();});
+}
+function drawTrend(daily){
+  const svg=$('trend'),W=svg.clientWidth||600,H=150,idx=S.sort==='v'?1:0;
+  $('trendMetric').textContent=S.sort==='v'?'GMV (THB)':(L()==='th'?'จำนวนชิ้น':'Units');
+  const max=Math.max(1,...daily.map(x=>x[idx]));const n=daily.length;const bw=W/n;const gap=n>60?0:Math.min(2,bw*.2);
+  const cs=getComputedStyle(root);const barC=cs.getPropertyValue('--bar').trim(),acc=cs.getPropertyValue('--accent').trim(),line=cs.getPropertyValue('--line').trim();
+  let h=`<line x1="0" y1="${H-.5}" x2="${W}" y2="${H-.5}" stroke="${line}"/>`;
+  daily.forEach((x,k)=>{const bh=x[idx]/max*(H-8);h+=`<rect data-k="${k}" x="${k*bw+gap/2}" y="${H-bh}" width="${Math.max(.5,bw-gap)}" height="${bh}" fill="${barC}" rx="${bw>6?2:0}"/>`;});
+  h+=`<rect id="hit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/>`;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML=h;
+  const tipDefault=()=>{$('tip').textContent=`${fmtDay(S.from)} - ${fmtDay(S.to)}  ·  ${L()==='th'?'สูงสุด':'Peak'} ${fmt(max)}`;};tipDefault();
+  let lastK=-1;
+  svg.onmousemove=e=>{const r=svg.getBoundingClientRect();const k=Math.min(n-1,Math.max(0,Math.floor((e.clientX-r.left)/r.width*n)));if(k===lastK)return;
+    if(lastK>=0){const o=svg.querySelector(`rect[data-k="${lastK}"]`);if(o)o.setAttribute('fill',barC);}
+    const b=svg.querySelector(`rect[data-k="${k}"]`);if(b)b.setAttribute('fill',acc);lastK=k;
+    $('tip').textContent=`${fmtDay(S.from+k)}  ·  ${fmt(daily[k][0])} ${L()==='th'?'ชิ้น':'units'}  ·  ${fmt(daily[k][1])} THB`;};
+  svg.onmouseleave=()=>{if(lastK>=0){const o=svg.querySelector(`rect[data-k="${lastK}"]`);if(o)o.setAttribute('fill',barC);}lastK=-1;tipDefault();};
+}
+function renderTable(){
+  const P=D.p;
+  $('count').textContent=`${fmt(rows.length)} SKU`;
+  if(!rows.length){$('tbody').innerHTML=`<tr><td colspan="10" class="empty">${L()==='th'?'ไม่มีข้อมูลในช่วงนี้':'No sales in this range'}</td></tr>`;$('moreBtn').style.display='none';return;}
+  const tot=S.sort==='v'?totV:totU;
+  $('tbody').innerHTML=rows.slice(0,S.limit).map((r,k)=>{const p=P[r.i];const link=`https://sasom.co.th/collectibles/${p[0]}/${p[5]}`;
+    return `<tr><td class="rk${k<3?' top':''}">${k+1}</td>
+    <td><a href="${link}" target="_blank" rel="noopener"><img class="thumb" loading="lazy" src="https://img.sasom.co.th/${p[5]}-1-n.jpg" alt=""></a></td>
+    <td><a class="pname" href="${link}" target="_blank" rel="noopener">${esc(p[1])}</a><div class="psku">${esc(p[0])}</div></td>
+    <td class="col-brand">${esc(p[2])}</td>
+    <td class="col-type"><span class="tag ${p[3]==='B'?'bp':'sc'}">${p[3]==='B'?'Box/Pack':'Single'}</span></td>
+    <td class="col-lang">${p[4]||'-'}</td>
+    <td class="num units">${fmt(r.u)}</td><td class="num">${fmt(r.v)}</td><td class="num col-avg">${fmt(r.v/r.u)}</td>
+    <td class="num col-share share">${(((S.sort==='v'?r.v:r.u)/tot)*100).toFixed(1)}%</td></tr>`;}).join('');
+  $('moreBtn').style.display=rows.length>S.limit?'inline-flex':'none';
+}
+$('exportBtn').onclick=()=>{
+  const P=D.p;const head=['rank','product_name','sku','brand','sub','language','units','gmv_thb','avg_price','sasom_link','img'];
+  const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
+  const lines=[head.join(',')].concat(rows.map((r,k)=>{const p=P[r.i];return [k+1,q(p[1]),q(p[0]),q(p[2]),p[3]==='B'?'Box/Pack':'Single Card',p[4]||'',r.u,r.v,Math.round(r.v/r.u),`https://sasom.co.th/collectibles/${p[0]}/${p[5]}`,`https://img.sasom.co.th/${p[5]}-1-n.jpg`].join(',');}));
+  const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`SASOM_TCG_BestSelling_${dayToISO(S.from)}_${dayToISO(S.to)}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>D&&drawTrend(lastDaily),150);});
+
+fetch('data.json').then(r=>r.json()).then(d=>{
+  D=d;Y0=d.year;MAXD=isoToDay(d.end);
+  $('dFrom').min=$('dTo').min=d.start;$('dFrom').max=$('dTo').max=d.end;
+  $('updated').innerHTML=`<span data-th>ข้อมูลถึง</span><span data-en>Data through</span> ${d.end}  ·  <span data-th>ไม่รวม Oripa และออเดอร์ที่ผู้ซื้อยกเลิก</span><span data-en>Excludes Oripa and buyer-cancelled orders</span>`;
+  const p=presetList()[0];setRange(p[2],p[3],p[0]);
+}).catch(()=>{$('tbody').innerHTML='<tr><td colspan="10" class="empty">Could not load data</td></tr>';});
+</script>
+</body>
+</html>
